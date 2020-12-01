@@ -1,3 +1,9 @@
 from django.contrib import admin
 
-# Register your models here.
+from event.models import User, Event, Location, Images
+
+
+admin.site.register(User)
+admin.site.register(Event)
+admin.site.register(Location)
+admin.site.register(Images)

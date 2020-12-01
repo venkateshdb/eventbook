@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+
+<head>
+    <title>
+        EventBook - Create a new event
+    </title>
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Roboto&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="header-top">
+        <nav class="navbar">
+            <div class="brand">
+                <a href="/">
+                    <h1 class="brand-name">EventBook</h1>
+                </a>
+            </div>
+        </nav>
+    </div>
+
+    <div class="form-container">
+        <form method="POST" action="create" class="form" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="basic">
+                <div class="basic-info">
+                    <h1>Basic Info</h1>
+                    <p>
+                        Name your event and tell event-goers why they should come. Add details that highlight what
+                        makes it
+                        unique.
+                    </p>
+                    <input type="text" name="title" placeholder="Event Title" class="input-holder">
+                    <input type="text" name="org_name" placeholder="Organizer" class="input-holder">
+                    <select name="type" class="input-holder drop">
+                        <option value="">Type</option>
+                        <option value="seminar_talk">
+                            Seminar or Talk
+                        </option>
+                        <option value="tournament">Tournament</option>
+                        <option value="competition">Competition</option>
+                        <option value="concert">Concert or Performance</option>
+                        <option value="workshop">Workshop</option>
+                    </select>
+                </div>
+
+                <div class="location">
+                    <h1>Location</h1>
+                    <p>
+                        Help people in the area discover your event and let attendees know where to show up.
+
+                    </p>
+                    <input type="text" name="venue" placeholder="Venue Name" class="input-holder">
+                    <input type="text" name="address" placeholder="Address" class="input-holder">
+                    <input type="text" name="state" placeholder="State" class="input-holder">
+                    <input type="text" name="city" placeholder="City" class="input-holder">
+                    <select name="country" class="input-holder drop">
+                        <option selected value="">Country</option>
+                        <option value="IN">India</option>
+                    </select>
+                    <input type="text" name="zip_code" placeholder="Pin Code" class="input-holder">
+                </div>
+
+                <div class="date_time">
+                    <h1>Date and time</h1>
+                    <p>
+                        Tell event-goers when your event starts and ends so they can make plans to attend.
+                    </p>
+                    <div class="start">
+                        <input type="date" name="start_date" class="input-holder date">
+                        <input type="text" name="start_time" placeholder="7:30AM" class="input-holder date">
+                    </div>
+                    <div class="end">
+                        <input type="date" name="end_date" class="input-holder date">
+                        <input type="text" name="end_time" placeholder="10:30PM" class="input-holder date">
+                    </div>
+                </div>
+            </div>
+
+            <div class="detail">
+                <div class="header-img">
+                    <h1>Header Image</h1>
+                    <p>This is the first image attendees will see at the top of your listing. Use a high quality image.
+                    </p>
+                    <input type="file" name="header_img" accept="image/png, image/jpeg, image/gif"
+                        value="Upload Header Image" required>
+                </div>
+
+                <div class="description">
+                    <h1>Description</h1>
+                    <p>Add more details to your event like your schedule, sponsors, or featured guests.
+                    </p>
+                    <textarea name="description"></textarea>
+                </div>
+                <div class="status">
+                    <p>Is Event Public/Private ?</p>
+                    <input type="radio" name="status" value="Public"> Public
+                    <input type="radio" name="status" value="Private">Private
+                </div>
+            </div>
+
+            <div class="button save">
+                <span class="text">Save & Continue</span>
+            </div>
+
+            <div class="button back">
+                <span class="text">Back</span>
+            </div>
+
+            <div class="button submit">
+                <input type="submit" class="text">
+            </div>
+        </form>
+    </div>
+
+    <script>
+        save = document.getElementsByClassName("save")[0];
+        back = document.getElementsByClassName("back")[0];
+        submit = document.getElementsByClassName("submit")[0];
+
+        basic = document.getElementsByClassName("basic")[0];
+        detail = document.getElementsByClassName("detail")[0];
+
+        save.addEventListener("click", e => {
+            if (basic.style.display == "" || "grid") {
+                basic.style.display = "none";
+                detail.style.display = "grid";
+
+                save.style.display = "none";
+                submit.style.display = "grid";
+                back.style.display = "grid";
+
+            }
+        });
+        back.addEventListener("click", e => {
+            if (basic.style.display != "") {
+                basic.style.display = "grid";
+                detail.style.display = "none";
+
+                back.style.display = "none";
+                submit.style.display = "none";
+                save.style.display = "grid";
+            }
+        })
+    </script>
+
+</body>
+
+</html>
