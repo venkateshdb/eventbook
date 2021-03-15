@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static '/css/main.css'%}">
+    <title>Verify User</title>
+    <style>
+        video {
+            width: 100%;
+            height: 100%;
+        }
+
+        canvas {
+            display: none;
+        }
+    </style>
+    <script>
+        let d;
+        window.onload = function () {
+            let video = document.getElementById('video');
+            let canvas = document.getElementById('canvas');
+            let context = canvas.getContext('2d');
+            let img_data_uri;
+            let rescan = document.getElementById("rescan");
+            let card = document.getElementsByClassName('card')[0];
+            let pay_id = document.getElementsByClassName('pay_id')[0];
+            let email = document.getElementsByClassName('email')[0];
+            let paid = document.getElementsByClassName('paid')[0];
+            let qty = document.getElementsByClassName('qty')[0];
+            let event = document.getElementsByClassName("event")[0];
+            if ('mediaDevices' in navigator && 'getUserMedia' in navigator.mediaDevices) {
+                console.log("Let's get this party started")
+            }
+            const constraints = {
+                video: {
+                    facingMode: "environment"
+                }
+            };
+            navigator.mediaDevices.getUserMedia(constraints)
+                .then(function (stream) {
+                    video.srcObject = stream;
+                    video.play()
+                })
+
+            document.getElementById("snap").addEventListener("click", function () {
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                context.drawImage(video, 0, 0);
+                img_data_uri = canvas.toDataURL().toString(); // convert img to base64 uri
+                verify_user(img_data_uri);
+            })
+
+            function verify_user(img) {
+                console.log(img);
+                let payload = {
+                    "img": img
+                }
+
+                fetch('/verify/', {
+                        method: "POST",
+                        headers: {
+                            'Content-Type': 'application/json;charset=utf-8'
+                        },
+                        body: JSON.stringify(payload)
+                    })
+                    .then(response => response.json())
+                    .then(resp => {
+                        console.log(resp);
+                        video.style.display = "none";
+                        canvas.style.display = "none";
+                        resp = JSON.parse(resp["status"])
+
+                        pay_id.innerText = "Pay Id: " + resp["info"].pay_id;
+                        email.innerText = "Email: " + resp["info"].user;
+                        paid.innerText = "Paid: " + resp["info"].paid;
+                        event.innerText = "Event: " + resp["info"].event;
+                        qty.innerText = "Qty: " + resp["info"].qty;
+                    })
+                    .catch(err => console.log(err));
+            }
+
+            rescan.onclick = function () {
+                location.reload();
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <video id="video"></video>
+    <div id="snap" class="btn">Scan</div>
+    <div id="rescan" class="btn">ReScan</div>
+    <canvas id="canvas"></canvas>
+
+    <div class="card">
+        <div class="wrapper qr">
+            <p class="pay_id"></p>
+            <p class="email"></p>
+            <p class="paid"></p>
+            <p class="event"></p>
+            <p class="qty"></p>
+        </div>
+    </div>
+</body>
+
+</html>

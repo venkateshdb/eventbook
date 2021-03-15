@@ -10,8 +10,11 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
-from pathlib import Path
 import os
+import razorpay as rpay
+from pathlib import Path
+from dotenv import load_dotenv
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,8 +24,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '5k%h8^*u0_o=s%ir5qi^-%4$=r1ij$t)9#z*-n1u#6-78^ip7!'
+SECRET_KEY = os.getenv("SECRET_KEY")
 
+# Razorpay
+client = rpay.Client(auth=(os.getenv("key_id"), os.getenv("key_secret")))
+client.set_app_details({"title" : "Eventbook", "version" : "1"})
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -36,9 +42,10 @@ INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
+    'django_extensions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'event.apps.EventConfig'
+    'event.apps.EventConfig',
 ]
 
 MIDDLEWARE = [

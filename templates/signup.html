@@ -15,7 +15,7 @@
             --gradient-color-second: rgb(234, 144, 182);
 
             --button-color: rgb(36, 146, 248);
-            --link-color: rgb(36, 146, 248);
+            --link: rgb(36, 146, 248);
             --white: rgb(255, 250, 245);
             --border-color: rgb(219, 229, 238);
 
@@ -35,7 +35,7 @@
         .header-top {
             height: 60px;
             width: 100%;
-            position: relative;
+            position: sticky;
             top: 0px;
             left: 0px;
             background-color: rgb(255, 255, 255);
@@ -59,20 +59,23 @@
 
         #grid__container {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr 2fr;
             height: 100vh;
+
         }
 
         #grid__container .login__container {
-            background-color: var(--white);
+            background-image: linear-gradient(-18deg, rgb(251, 226, 65), rgb(23, 185, 188));
             padding-top: 3em;
             padding-left: 4em;
         }
 
         #grid__container .form__heading {
             font-weight: 300;
-            font-size: 2em;
-            margin-bottom: 1.5em;
+            font-size: 44px;
+            /* margin-bottom: 1.5em;
+text-shadow: -2px -1px 1px black; */
+            color: white;
         }
 
         .txt:focus {
@@ -87,7 +90,7 @@
             border-left-width: 0;
             padding: 1em;
             font-size: 17px;
-            border-bottom-width: 3px !important;
+            border-bottom-width: 2px !important;
             margin-bottom: 3em;
             width: 50%;
             background-color: var(--white);
@@ -120,12 +123,12 @@
         .login__container p,
         li {
             display: inline-block;
-            color: grey;
+            color: #464040;
         }
 
         a>li {
             list-style: none;
-            color: var(--link-color) !important;
+            color: var(--link) !important;
             text-decoration: none;
             font-weight: 500;
             margin: 24px 0 22px 0;
@@ -137,6 +140,9 @@
         #image__container {
             background-color: rgb(255, 235, 223);
             display: grid;
+            background-image: url(/static/images/signup.webp);
+            background-position: center;
+            background-size: contain;
         }
 
         #image__container>img {
@@ -144,24 +150,34 @@
             position: relative;
             left: 24%;
             right: 50%;
+            display: none;
         }
 
-        .pass-group {
+        p.error {
+            background-color: rgb(249, 249, 249);
+            padding: 10px;
+            width: 50%;
+            border-left: 3px solid rgb(219, 60, 49);
+            color: black !important;
+            letter-spacing: 1px;
+            box-shadow: 0 2px 3px grey;
+
+        }
+
+        img.error-icon {
             position: relative;
+            top: -2px !important;
         }
 
-        .show-pass {
-            position: absolute;
-            top: 14px;
-            left: 286px;
-            transition: all .3s;
-            padding: 4px;
-            border-radius: 3px;
+        span.err__text {
+            position: relative;
+            top: -9px;
+            left: 4px;
         }
 
-        .show-pass:hover {
-            background: rgb(211, 211, 211);
-            cursor: pointer;
+        button.btn:hover {
+            box-shadow: 0 2px 3px grey;
+            transition: .2s ease-in;
         }
 
         @media only screen and (max-width:850px) {
@@ -172,12 +188,34 @@
             #grid__container {
                 display: grid;
                 grid-template-columns: 1fr;
-                justify-items: center;
+                /*justify-items: center;*/
             }
 
             #image__container {
                 display: none !important;
             }
+
+            p.error {
+                width: 90%;
+            }
+        }
+
+        .pass-group {
+            position: relative;
+        }
+
+        .show-pass {
+            position: absolute;
+            top: 14px;
+            left: 277px;
+            transition: all .3s;
+            padding: 4px;
+            border-radius: 3px;
+        }
+
+        .show-pass:hover {
+            background: rgb(211, 211, 211);
+            cursor: pointer;
         }
     </style>
 </head>
@@ -193,6 +231,11 @@
         </nav>
     </div>
     <div id="grid__container">
+
+        <section id="image__container">
+            <img src="/static/images/login-char.png" alt="Hello User" class="image">
+        </section>
+
         <section class="login__container">
             <h2 class="form__heading">Signup</h2>
             <form enctype="multipart/form-data" accept="utf=8" action="signup" method="post">
@@ -208,24 +251,15 @@
                     <input type="password" name="password" class="txt" placeholder="Password" required>
                     <span class="show-pass">Show</span>
                 </div>
-                <!-- <a href="/forgot_password">
-                    <li>FORGOT PASSWORD?</li>
-                </a> -->
 
                 <button class="btn" value="LOGIN">SIGNUP</button>
 
                 <p>Have an account?</p>
-                <a href="/login">
+                <a href="/events/login">
                     <li>&nbsp;&nbsp;&nbsp;Login</li>
                 </a>
             </form>
         </section>
-
-        <section id="image__container">
-            <img src="/static/images/login-char.png" alt="Hello User" class="image">
-        </section>
-
-
     </div>
     <script>
         let el = document.getElementsByClassName("show-pass");

@@ -8,8 +8,6 @@
     </title>
     <meta name="viewport" content="width=device-width">
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Roboto&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -22,130 +20,209 @@
             </div>
         </nav>
     </div>
-
-    <div class="form-container">
-        <form method="POST" action="create" class="form" enctype="multipart/form-data">
-            {% csrf_token %}
-            <div class="basic">
-                <div class="basic-info">
-                    <h1>Basic Info</h1>
-                    <p>
-                        Name your event and tell event-goers why they should come. Add details that highlight what
-                        makes it
-                        unique.
-                    </p>
-                    <input type="text" name="title" placeholder="Event Title" class="input-holder">
-                    <input type="text" name="org_name" placeholder="Organizer" class="input-holder">
-                    <select name="type" class="input-holder drop">
-                        <option value="">Type</option>
-                        <option value="seminar_talk">
-                            Seminar or Talk
-                        </option>
-                        <option value="tournament">Tournament</option>
-                        <option value="competition">Competition</option>
-                        <option value="concert">Concert or Performance</option>
-                        <option value="workshop">Workshop</option>
-                    </select>
+    <div class="container">
+        <section id="sidebar">
+            <div class="sidebar-container">
+                <div class="user">
+                    <img src="../static/images/icon/user.svg" alt="{{username}}" class="profile-img">
+                    <h3>{{username}}</h3>
+                </div>
+                <div class="control">
+                    <ul>
+                        <a onclick="showHide(0)">
+                            <img src="../static/images/icon/info.svg">
+                            <li class="profile">Basic info
+                            </li>
+                        </a>
+                        <a onclick="showHide(1)">
+                            <img src="../static/images/icon/detail.svg">
+                            <li class="notification">Detail
+                            </li>
+                        </a>
+                        <a onclick="showHide(2)">
+                            <img src="../static/images/icon/ticket.svg">
+                            <li class="mypost">Ticket
+                            </li>
+                        </a>
+                        <a href="dashboard">
+                            <img src="../static/images/icon/dashboard.svg">
+                            <li class="draft">Dashboard
+                            </li>
+                        </a>
+                    </ul>
                 </div>
 
-                <div class="location">
-                    <h1>Location</h1>
-                    <p>
-                        Help people in the area discover your event and let attendees know where to show up.
-
-                    </p>
-                    <input type="text" name="venue" placeholder="Venue Name" class="input-holder">
-                    <input type="text" name="address" placeholder="Address" class="input-holder">
-                    <input type="text" name="state" placeholder="State" class="input-holder">
-                    <input type="text" name="city" placeholder="City" class="input-holder">
-                    <select name="country" class="input-holder drop">
-                        <option selected value="">Country</option>
-                        <option value="IN">India</option>
-                    </select>
-                    <input type="text" name="zip_code" placeholder="Pin Code" class="input-holder">
-                </div>
-
-                <div class="date_time">
-                    <h1>Date and time</h1>
-                    <p>
-                        Tell event-goers when your event starts and ends so they can make plans to attend.
-                    </p>
-                    <div class="start">
-                        <input type="date" name="start_date" class="input-holder date">
-                        <input type="text" name="start_time" placeholder="7:30AM" class="input-holder date">
+        </section>
+        <div class="form-container">
+            <form method="POST" action="create" class="form" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="basic step hide">
+                    <div class="basic-info">
+                        <h1>Basic Info</h1>
+                        <p>
+                            Name your event and tell event-goers why they should come. Add details that highlight what
+                            makes it
+                            unique.
+                        </p>
+                        <input type="text" name="title" placeholder="Event Title" class="input-holder">
+                        <input type="text" name="org_name" placeholder="Organizer" class="input-holder">
+                        <select name="type" class="input-holder drop">
+                            <option value="">Type</option>
+                            <option value="seminar_talk">
+                                Seminar or Talk
+                            </option>
+                            <option value="tournament">Tournament</option>
+                            <option value="competition">Competition</option>
+                            <option value="concert">Concert or Performance</option>
+                            <option value="workshop">Workshop</option>
+                        </select>
                     </div>
-                    <div class="end">
-                        <input type="date" name="end_date" class="input-holder date">
-                        <input type="text" name="end_time" placeholder="10:30PM" class="input-holder date">
+
+                    <div class="location">
+                        <h1>Location</h1>
+                        <p>
+                            Help people in the area discover your event and let attendees know where to show up.
+
+                        </p>
+                        <input type="text" name="venue" placeholder="Venue Name" class="input-holder">
+                        <input type="text" name="address" placeholder="Address" class="input-holder">
+                        <input type="text" name="state" placeholder="State" class="input-holder">
+                        <input type="text" name="city" placeholder="City" class="input-holder">
+                        <select name="country" class="input-holder drop">
+                            <option selected value="">Country</option>
+                            <option value="IN">India</option>
+                        </select>
+                        <input type="text" name="zip_code" placeholder="Pin Code" class="input-holder">
+                    </div>
+
+                    <div class="date_time">
+                        <h1>Date and time</h1>
+                        <p>
+                            Tell event-goers when your event starts and ends so they can make plans to attend.
+                        </p>
+                        <div class="start">
+                            <input type="datetime-local" name="start_datetime" class="input-holder date">
+                            <!-- <input type="text" name="start_time" placeholder="7:30AM" class="input-holder date"> -->
+                        </div>
+                        <div class="end">
+                            <input type="datetime-local" name="end_datetime" class="input-holder date">
+                            <!-- <input type="text" name="end_time" placeholder="10:30PM" class="input-holder date"> -->
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="detail">
-                <div class="header-img">
-                    <h1>Header Image</h1>
-                    <p>This is the first image attendees will see at the top of your listing. Use a high quality image.
-                    </p>
-                    <input type="file" name="header_img" accept="image/png, image/jpeg, image/gif"
-                        value="Upload Header Image" required>
+                <div class="detail step hide">
+                    <div class="description">
+                        <h1>Description</h1>
+                        <p>Add more details to your event like your schedule, sponsors, or featured guests.
+                        </p>
+                        <textarea name="description">
+                    </textarea>
+                    </div>
+
+                    <div class="header-img">
+                        <h1>Header Image</h1>
+                        <p>This is the first image attendees will see at the top of your listing. Use a high quality
+                            image.
+                        </p>
+                        <input type="file" name="header_img" accept="image/*" value="Upload Header Image" required>
+                    </div>
+
+                    <div class="status">
+                        <h3>Is Event Public/Private ?</h3>
+                        <input type="radio" name="status" value="Public"> Public
+                        <input type="radio" name="status" value="Private">Private
+                    </div>
                 </div>
 
-                <div class="description">
-                    <h1>Description</h1>
-                    <p>Add more details to your event like your schedule, sponsors, or featured guests.
-                    </p>
-                    <textarea name="description"></textarea>
+
+                <div class="Ticket step hide">
+                    <h1>Tickets</h1>
+                    <input type="text" name="qty" class="input-holder" placeholder="Quantity">
+                    <input type="text" name="price" class="input-holder" placeholder="Price (0 For Free)">
+                    <input type="text" name="max" class="input-holder" placeholder="Max Tickets">
                 </div>
-                <div class="status">
-                    <p>Is Event Public/Private ?</p>
-                    <input type="radio" name="status" value="Public"> Public
-                    <input type="radio" name="status" value="Private">Private
+
+                <div class="button">
+                    <div class="btn back">
+                        <span class="text">Back</span>
+                    </div>
+                    <div class="btn save">
+                        <span class="text">Next</span>
+                    </div>
                 </div>
-            </div>
-
-            <div class="button save">
-                <span class="text">Save & Continue</span>
-            </div>
-
-            <div class="button back">
-                <span class="text">Back</span>
-            </div>
-
-            <div class="button submit">
-                <input type="submit" class="text">
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
-
     <script>
-        save = document.getElementsByClassName("save")[0];
-        back = document.getElementsByClassName("back")[0];
-        submit = document.getElementsByClassName("submit")[0];
+        let currentTab = 0;
+        let save = document.getElementsByClassName("save")[0];
+        let back = document.getElementsByClassName("back")[0];
+        let form = document.getElementsByClassName('form')[0];
+        showTab(currentTab)
+        /*
+        Function to manage which step to be shown.
 
-        basic = document.getElementsByClassName("basic")[0];
-        detail = document.getElementsByClassName("detail")[0];
+        @param N index to step to be shown
+        */
+        function showTab(n) {
+            let steps = document.getElementsByClassName("step");
 
+            // show tab at index n, at first its 0
+            steps[n].classList.replace("hide", 'show');
+            console.log(n);
+            if (n == 0) {
+                document.getElementsByClassName("back")[0].style.display = "none";
+            } else {
+                document.getElementsByClassName("back")[0].style.display = "block";
+            }
+
+            if (n == (steps.length - 1)) {
+                document.getElementsByClassName("save")[0].children[0].innerHTML = "Submit";
+                save.classList.add("submit");
+            } else {
+                document.getElementsByClassName("save")[0].children[0].innerHTML = "Next";
+            }
+        }
         save.addEventListener("click", e => {
-            if (basic.style.display == "" || "grid") {
-                basic.style.display = "none";
-                detail.style.display = "grid";
-
-                save.style.display = "none";
-                submit.style.display = "grid";
-                back.style.display = "grid";
-
+            nextprev(1);
+            if (save.classList.contains('submit')) {
+                save.onclick = () => {
+                    form.submit();
+                }
             }
         });
-        back.addEventListener("click", e => {
-            if (basic.style.display != "") {
-                basic.style.display = "grid";
-                detail.style.display = "none";
 
-                back.style.display = "none";
-                submit.style.display = "none";
-                save.style.display = "grid";
-            }
+        back.addEventListener("click", e => {
+            nextprev(-1);
         })
+
+        function nextprev(n) {
+            let steps = document.getElementsByClassName("step");
+
+            steps[currentTab].classList.replace("show", "hide");
+
+            currentTab = currentTab + n;
+
+            if (currentTab >= (steps.length)) {
+                console.log("end");
+                return false;
+            }
+
+            showTab(currentTab);
+        }
+
+        function showHide(n) {
+            let steps = document.getElementsByClassName("step");
+
+            Array.from(steps).forEach(e => {
+                e.classList.replace("show", "hide");
+                // Also update current tab var as me
+                // go to jump to different steps.
+                currentTab = n;
+                showTab(n);
+            });
+        }
     </script>
 
 </body>

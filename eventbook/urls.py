@@ -22,5 +22,6 @@ urlpatterns = [
     path('', views.index, name="index"),
     # Map all urls for our app
     path('events/', include('event.urls')),
-    path('admin/', admin.site.urls)
+    path('admin/', admin.site.urls),
+    path('verify/', views.qr_verify, name="qr")
 ]

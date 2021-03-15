@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+
+<head>
+    <title>
+        EventBook - Create a new event
+    </title>
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Roboto&display=swap" rel="stylesheet">
+
+    <!-- include libraries(jQuery, bootstrap) -->
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" />
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js">
+    </script>
+
+    <!-- include summernote css/js-->
+    <link href="summernote.css" rel="stylesheet">
+    <script src="summernote.js"></script>
+</head>
+
+<body>
+    <div class="header-top">
+        <nav class="navbar">
+            <div class="brand">
+                <a href="/">
+                    <h1 class="brand-name">EventBook</h1>
+                </a>
+            </div>
+        </nav>
+    </div>
+    <div class="container">
+        <!-- <div class="tab-container">
+            <ol class="tab-nav">
+                <li>Basic Info</li>
+                <li>Basic Info</li>
+                <li>Basic Info</li>
+                <li>Basic Info</li>
+            </ol>
+        </div> -->
+        <section id="sidebar">
+            <div class="sidebar-container">
+                <div class="user">
+                    <img src="../static/images/user.jpg" alt="{{username}}" class="profile-img">
+                    <h3>{{username}}</h3>
+                </div>
+                <di v class=" control">
+                    <ul>
+                        <a href="/profile">
+                            <img src="../static/images/icon/alert.png">
+                            <li class="profile">Basic info
+                            </li>
+                        </a>
+                        <a href="/notification">
+                            <img src="../static/images/icon/detail.png">
+                            <li class="notification">Detail
+                            </li>
+                        </a>
+                        <a href="/userpost">
+                            <img src="../static/images/icon/ticket.png">
+                            <li class="mypost">Ticket
+                            </li>
+                        </a>
+                        <a href="/draft">
+                            <img src="../static/images/icon/dashboard.png">
+                            <li class="draft">Dashboard
+                            </li>
+                        </a>
+                    </ul>
+            </div>
+    </div>
+    </section>
+    <div class="form-container">
+        <form method="POST" action="create" class="form" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="basic">
+                <div class="basic-info">
+                    <h1>Basic Info</h1>
+                    <p>
+                        Name your event and tell event-goers why they should come. Add details that highlight what
+                        makes it
+                        unique.
+                    </p>
+                    <input type="text" name="title" placeholder="Event Title" class="input-holder">
+                    <input type="text" name="org_name" placeholder="Organizer" class="input-holder">
+                    <select name="type" class="input-holder drop">
+                        <option value="">Type</option>
+                        <option value="seminar_talk">
+                            Seminar or Talk
+                        </option>
+                        <option value="tournament">Tournament</option>
+                        <option value="competition">Competition</option>
+                        <option value="concert">Concert or Performance</option>
+                        <option value="workshop">Workshop</option>
+                    </select>
+                </div>
+
+                <div class="location">
+                    <h1>Location</h1>
+                    <p>
+                        Help people in the area discover your event and let attendees know where to show up.
+
+                    </p>
+                    <input type="text" name="venue" placeholder="Venue Name" class="input-holder">
+                    <input type="text" name="address" placeholder="Address" class="input-holder">
+                    <input type="text" name="state" placeholder="State" class="input-holder">
+                    <input type="text" name="city" placeholder="City" class="input-holder">
+                    <select name="country" class="input-holder drop">
+                        <option selected value="">Country</option>
+                        <option value="IN">India</option>
+                    </select>
+                    <input type="text" name="zip_code" placeholder="Pin Code" class="input-holder">
+                </div>
+
+                <div class="date_time">
+                    <h1>Date and time</h1>
+                    <p>
+                        Tell event-goers when your event starts and ends so they can make plans to attend.
+                    </p>
+                    <div class="start">
+                        <input type="datetime-local" name="start_datetime" class="input-holder date">
+                        <!-- <input type="text" name="start_time" placeholder="7:30AM" class="input-holder date"> -->
+                    </div>
+                    <div class="end">
+                        <input type="datetime-local" name="end_datetime" class="input-holder date">
+                        <!-- <input type="text" name="end_time" placeholder="10:30PM" class="input-holder date"> -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="detail">
+                <div class="description">
+                    <h1>Description</h1>
+                    <p>Add more details to your event like your schedule, sponsors, or featured guests.
+                    </p>
+                    <div class="editor">
+                        <div class="toolbar">
+                            <div class="line">
+                                <div class="box">
+                                    <span class="btn-icon" data-action="bold">
+                                        <img src="https://image.flaticon.com/icons/svg/25/25432.svg">
+                                    </span>
+                                    <span class="btn-icon" data-action="italic" title="Italic">
+                                        <img loading="lazy" src="https://image.flaticon.com/icons/svg/25/25392.svg">
+                                    </span>
+                                    <span class="btn-icon" data-action="underline" title="Underline">
+                                        <img loading="lazy" src="https://image.flaticon.com/icons/svg/25/25433.svg">
+                                    </span>
+                                </div>
+
+                                <div class="box">
+                                    <span class="btn-icon" data-action="justifyLeft" title="Justify left">
+                                        <img loading="lazy" src="https://image.flaticon.com/icons/svg/25/25351.svg">
+                                    </span>
+                                    <span class="btn-icon" data-action="justifyCenter" title="Justify center">
+                                        <img loading="lazy" src="https://image.flaticon.com/icons/svg/25/25440.svg">
+                                    </span>
+                                    <span class="btn-icon" data-action="justifyRight" title="Justify right">
+                                        <img loading="lazy" src="https://image.flaticon.com/icons/svg/25/25288.svg">
+                                    </span>
+                                    <span class="btn-icon" data-action="formatBlock" title="Justify block">
+                                        <img loading="lazy" src="https://image.flaticon.com/icons/svg/25/25181.svg">
+                                    </span>
+                                </div>
+                                <div class="box">
+                                    <span class="btn-icon" data-action="insertOrderedList" title="Insert ordered list">
+                                        <img loading="lazy" src="https://image.flaticon.com/icons/svg/25/25242.svg">
+                                    </span>
+                                    <span class="btn-icon" data-action="insertUnorderedList"
+                                        title="Insert unordered list">
+                                        <img loading="lazy" src="https://image.flaticon.com/icons/svg/25/25648.svg">
+                                    </span>
+                                    <span class="btn-icon" data-action="outdent" title="Outdent">
+                                        <img loading="lazy" src="https://image.flaticon.com/icons/svg/25/25410.svg">
+                                    </span>
+                                    <span class="btn-icon" data-action="indent" title="Indent">
+                                        <img loading="lazy" src="https://image.flaticon.com/icons/svg/25/25233.svg">
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="line">
+                                <div class="box">
+                                    <span class="btn-icon" data-action="createLink" title="Insert Link">
+                                        <img loading="lazy" src="https://image.flaticon.com/icons/svg/25/25385.svg">
+                                    </span>
+                                    <span class="btn-icon" data-action="unlink" title="Unlink">
+                                        <img loading="lazy" src="https://image.flaticon.com/icons/svg/25/25341.svg">
+                                    </span>
+                                    <span class="btn-icon" data-action="foreColor" title="color">
+                                        <img loading="lazy" src="/static/images//icon/fill.png">
+                                        <input type="color" class="color" value="#ff0000">
+                                    </span>
+                                </div>
+                                <div class="box">
+                                    <span class="btn-icon" title="image">
+                                        <input type="file" accept="image/*" onchange="getImage()" class="image-file">
+                                    </span>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="content-area" contenteditable="true"></div>
+                    </div>
+                </div>
+
+                <div class="header-img">
+                    <h1>Header Image</h1>
+                    <p>This is the first image attendees will see at the top of your listing. Use a high quality
+                        image.
+                    </p>
+                    <input type="file" name="header_img" accept="image/*" value="Upload Header Image" required>
+                </div>
+
+                <div class="status">
+                    <p>Is Event Public/Private ?</p>
+                    <input type="radio" name="status" value="Public"> Public
+                    <input type="radio" name="status" value="Private">Private
+                </div>
+            </div>
+
+            <div class="Ticket">
+                <p>Tickets</p>
+            </div>
+
+            <div class="button save">
+                <span class="text">Save & Continue</span>
+            </div>
+
+            <div class="button back">
+                <span class="text">Back</span>
+            </div>
+
+            <div class="button submit">
+                <input type="submit" class="text">
+            </div>
+        </form>
+    </div>
+    </div>
+
+
+    <script>
+        save = document.getElementsByClassName("save")[0];
+        back = document.getElementsByClassName("back")[0];
+        submit = document.getElementsByClassName("submit")[0];
+
+        basic = document.getElementsByClassName("basic")[0];
+        detail = document.getElementsByClassName("detail")[0];
+
+        editor = document.getElementsByClassName("editor");
+        btn = document.getElementsByClassName("btn-icon");
+        color = document.getElementsByClassName("color")[0];
+        content = document.getElementsByClassName("content-area")[0];
+
+        Array.from(btn).forEach(function (e) {
+            e.addEventListener("click", () => {
+                let action = e.getAttribute('data-action');
+                let value = "#ff0000";
+                switch (action) {
+                    case 'foreColor':
+                        color.addEventListener("change", () => {
+                            let value = color.value;
+                            console.log(value);
+                            document.execCommand(action, false, value);
+                        });
+                        break;
+                    case 'createLink':
+                        let link = prompt("Create a link eg: https://google.com");
+                        document.execCommand(action, false, link)
+                        break;
+                    default:
+                        exeDefaultAction(action);
+                }
+
+            })
+        });
+
+        function getImage() {
+            var file = document.getElementsByClassName("image-file")[0].files[0];
+            console.log(file)
+            var reader = new FileReader();
+
+            let dataURI;
+
+            reader.addEventListener(
+                "load",
+                function () {
+                    dataURI = reader.result;
+
+                    const img = document.createElement("img");
+                    img.src = dataURI;
+                    content.appendChild(img);
+                },
+                false
+            );
+
+            if (file) {
+                console.log("s");
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function exeDefaultAction(action) {
+            document.execCommand(action, false);
+        }
+
+        save.addEventListener("click", e => {
+            if (basic.style.display == "" || "grid") {
+                basic.style.display = "none";
+                detail.style.display = "grid";
+
+                save.style.display = "none";
+                submit.style.display = "grid";
+                back.style.display = "grid";
+
+            }
+        });
+        back.addEventListener("click", e => {
+            if (basic.style.display != "") {
+                basic.style.display = "grid";
+                detail.style.display = "none";
+
+                back.style.display = "none";
+                submit.style.display = "none";
+                save.style.display = "grid";
+            }
+        })
+    </script>
+
+</body>
+
+</html>

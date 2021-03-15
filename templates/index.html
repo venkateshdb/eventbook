@@ -8,8 +8,6 @@
     </title>
     <meta name="viewport" content="width=device-width">
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Roboto&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -20,6 +18,25 @@
                     <h1 class="brand-name">EventBook</h1>
                 </a>
             </div>
+
+
+            <div class="link">
+                {% if not request.session.logged_in %}
+                <a href="events/login">
+                    <p>Login</p>
+                </a>
+                <a href="events/signup">
+                    <p>Signup</p>
+                </a>
+                {% else %}
+                <a href="events/dashboard">
+                    <p>Dashboard</p>
+                </a>
+                <a href="events/logout">
+                    <p>Logout</p>
+                </a>
+                {% endif %}
+            </div>
         </nav>
     </div>
 
@@ -27,13 +44,13 @@
 
         <div class="container-right">
             <h1 class="container-right-text">
-                <span>Simplest Way,
+                <span>Simplest Way
                 </span>
                 <span>To manage</span>Events.
             </h1>
 
             <div class="create-event-button">
-                <div class="button">
+                <div class="button btn">
                     <a href="/events/create">
                         <span class="text">
                             Create Event</span>
@@ -60,11 +77,29 @@
     </div>
     <div class="event-explore">
         <h1>More event</h1>
-
-        <div class="event-cards">
-
+        <div class="event-group">
+            {% for q in event %}
+            <a href="/events/e/?event_id={{q.event_id}}">
+                <div class="card" data-event_id={{q.event_id}}>
+                    <div class="header_img"
+                        style="background-image:url(static/media/{{q.header_img}}); background-position: center; background-size: contain; background-repeat: no-repeat;">
+                    </div>
+                    <div class="wrapper">
+                        <h2 class="title">{{q.title}}
+                            <span class="org" style="font-size:small; color:grey">by {{q.org_name}}</span>
+                        </h2>
+                        <p class="datetime">{{q.start_date_time}}
+                        </p>
+                        <p class="desc">{{q.description| truncatechars:100}}</p>
+                        <!-- <p>{{q.address}}</p> -->
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
         </div>
     </div>
+
+    <footer>@Venkatesh Bellale 2020</footer>
 </body>
 
 </html>
