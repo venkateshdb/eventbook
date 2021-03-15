@@ -34,7 +34,7 @@
     .header-top {
       height: 60px;
       width: 100%;
-      position: relative;
+      position: sticky;
       top: 0px;
       left: 0px;
       background-color: rgb(255, 255, 255);
@@ -58,7 +58,7 @@
 
     #grid__container {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr 2fr;
       height: 100vh;
 
     }
@@ -72,8 +72,9 @@
     #grid__container .form__heading {
       font-weight: 300;
       font-size: 44px;
-      margin-bottom: 1.5em;
-      text-shadow: -2px -1px 1px black;
+      /* margin-bottom: 1.5em;
+      text-shadow: -2px -1px 1px black; */
+      color: white;
     }
 
     .txt:focus {
@@ -121,7 +122,7 @@
     .login__container p,
     li {
       display: inline-block;
-      color: grey;
+      color: #464040;
     }
 
     a>li {
@@ -205,7 +206,7 @@
     .show-pass {
       position: absolute;
       top: 14px;
-      left: 286px;
+      left: 277px;
       transition: all .3s;
       padding: 4px;
       border-radius: 3px;
@@ -230,6 +231,11 @@
     </nav>
   </div>
   <div id="grid__container">
+    <section id="image__container">
+      <!-- <img src="static/images/login-char.png" alt="Hello User" class="image"> -->
+    </section>
+
+
     <section class="login__container">
       <h2 class="form__heading">Login</h2>
       <form enctype="multipart/form-data" accept="utf-8" action="login" method="post">
@@ -261,11 +267,6 @@
 
       </form>
     </section>
-
-    <section id="image__container">
-      <!-- <img src="static/images/login-char.png" alt="Hello User" class="image"> -->
-    </section>
-
 
   </div>
   <script>

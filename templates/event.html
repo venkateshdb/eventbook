@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+
+<head>
+    <title>
+        {{get_event.title}} - Eventbook
+    </title>
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Roboto&display=swap" rel="stylesheet">
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <style>
+        .popup {
+            display: none;
+            position: fixed;
+            margin: 0 auto;
+            z-index: 10;
+            height: 100%;
+            width: 100%;
+            top: 0;
+            bottom: 0;
+            overflow: hidden;
+            background: rgb(0, 0, 0, 0.4);
+        }
+
+        .popup-content {
+            background: white;
+            margin: 15% auto;
+            padding: 20px;
+            width: 50%;
+            animation-name: animatetop;
+            animation-duration: .1s;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        @keyframes animatetop {
+            from {
+                top: -300px;
+                opacity: 0;
+            }
+
+            to {
+                top: 0px;
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header-top">
+        <nav class="navbar">
+            <div class="brand">
+                <a href="/">
+                    <h1 class="brand-name">EventBook</h1>
+                </a>
+            </div>
+        </nav>
+    </div>
+
+    <div class="hero-container"
+        style="background-image:linear-gradient(45deg, rgb(10 10 10 / 90%), rgb(0 0 0 / 72%)),url(/static/media/{{get_event.header_img}}); background-size: cover;">
+        <span>
+            <h1 class="heading">{{get_event.title}}</h1>
+            <p class="time">
+                {{get_event.start_date_time}} -
+                {{get_event.end_date_time}}
+            </p>
+            <div class="btn reg_btn">
+                <p>Register for event</p>
+            </div>
+        </span>
+    </div>
+
+    <div class="popup">
+        <div class="popup-content">
+            <form id="payments">
+                <span class="close">&times;</span>
+                {% if not request.session.logged_in %}
+                <input type="email" class="input-holder email" placeholder="Email">
+                <input type="password" class="input-holder pwd" placeholder="Password">
+                {% endif %}
+                <input type="text" class="input-holder qty" placeholder="Quantity" max={{get_event.max_ticket} min=1>
+                <div class="btn" onclick="send_data()">
+                Buy &#8377;
+                <span class="buy" data-price="{{get_event.price}}" data-new-price="">{{get_event.price}}</span>
+        </div>
+        </form>
+        <div class="checkout hide">
+            <p class="c-ticket_id"></p>
+            <p class="c-amount"></p>
+            <p class="c-qty"></p>
+            <p class="c-user"></p>
+
+            <button id="rzp-button1">Checkout</button>
+        </div>
+    </div>
+    </div>
+    <div class="event_desc">
+        {{get_event.description| safe}}
+    </div>
+    <script>
+        let title = document.getElementsByClassName('heading')[0];
+        let form = document.getElementById("payments")
+        let qty = document.getElementsByClassName('qty')[0];
+        let email = document.getElementsByClassName('email')[0];
+        let pwd = document.getElementsByClassName('pwd')[0];
+        let buy = document.getElementsByClassName("buy")[0];
+        let checkout = document.getElementsByClassName("checkout")[0];
+        qty.onblur = function () {
+            if (qty.value == "") {
+                qty.value = qty.min
+            }
+            buy.innerHTML = qty.value * buy.getAttribute("data-price");
+            buy.setAttribute("data-new-price", buy.innerHTML);
+        }
+
+        function send_data() {
+
+            let payload = {
+                "amount": buy.getAttribute("data-new-price"),
+                "currency": "INR",
+                "qty": qty.value
+            }
+
+            if (email == undefined && pwd == undefined) {
+                payload["email"] = "";
+                payload["pwd"] = "";
+            } else {
+                payload["email"] = email.value;
+                payload["pwd"] = pwd.value;
+            }
+
+            fetch('/events/e/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json;charset=utf-8'
+                    },
+                    body: JSON.stringify(payload)
+                })
+                .then(response => response.json())
+                .then(resp => {
+                    checkout.classList.remove('hide');
+                    document.getElementById('payments').classList.add("hide");
+
+                    document.getElementsByClassName('c-ticket_id')[0].innerText =
+                        `Ticket Id: ${resp["resp"]["id"]}`;
+                    document.getElementsByClassName('c-amount')[0].innerText =
+                        `Amount: ${parseInt(resp["resp"]["amount"])/ 100}`;
+                    document.getElementsByClassName('c-qty')[0].innerText =
+                        `Quantity: ${resp["resp"]["qty"]}`;
+
+                    document.getElementsByClassName('c-user')[0].innerText =
+                        `Username: ${resp["resp"]["user"]}`;
+
+                    // update options varibles
+                    options["order_id"] = resp["resp"]["id"];
+                    options["amount"] = parseInt(resp["resp"]["amount"]);
+                    options["description"] = title.innerText + " Tickets";
+                    options["prefill"]["email"] = resp["resp"]["user"];
+
+                    console.log(options);
+
+                    var rzp1 = new Razorpay(options);
+                    document.getElementById('rzp-button1').onclick =
+                        function (e) {
+                            rzp1.open();
+                            e.preventDefault();
+                        }
+                })
+                .catch(err => console.log(err));
+        }
+        let popup = document.getElementsByClassName('popup')[0];
+        let reg_btn = document.getElementsByClassName('reg_btn')[0];
+        let close = document.getElementsByClassName('close')[0];
+        reg_btn.onclick = () => {
+            popup.style.display = "block";
+        }
+
+        close.onclick = () => {
+            popup.style.display = "none";
+        }
+        window.onclick = function (e) {
+            if (e.target == popup) {
+                popup.style.display = "none";
+            }
+        }
+        // payment razorpay
+        var options = {
+            "key": "rzp_test_sbk3E9alUVen4n",
+            "amount": 400 * 100,
+            "currency": "INR",
+            "name": "EventBook",
+            "description": "Event Tickets",
+            "image": "/static/images/logo.jpg",
+            "order_id": "",
+            "callback_url": window.location.origin + '/events/success/',
+            "prefill": {
+                "email": ""
+            },
+            "theme": {
+                "color": "#1f61db"
+            }
+        };
+    </script>
+</body>
+
+</html>
