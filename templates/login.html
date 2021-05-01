@@ -34,25 +34,34 @@
     .header-top {
       height: 60px;
       width: 100%;
-      position: sticky;
+      position: fixed;
       top: 0px;
       left: 0px;
       background-color: rgb(255, 255, 255);
       justify-items: center;
       font-family: pacifico;
       color: rgb(10, 9, 9);
+      z-index: 100;
+      box-shadow: 0px 2px 6px -5px #6d6363;
     }
 
     .navbar {
       display: grid;
       justify-items: center;
+      grid-template-columns: auto 200px;
       height: 60px;
     }
 
     .brand,
     .brand-name {
-      align-self: center;
+      width: 100%;
       margin: 0;
+      height: 100%;
+      display: grid;
+      justify-content: center;
+      align-content: center;
+      position: relative;
+      left: 40px;
     }
 
 
@@ -64,9 +73,9 @@
     }
 
     #grid__container .login__container {
-      background-image: linear-gradient(-18deg, rgb(251, 226, 65), rgb(23, 185, 188));
-      padding-top: 3em;
-      padding-left: 4em;
+      /* background-image: linear-gradient(-18deg, rgb(251, 226, 65), rgb(23, 185, 188)); */
+      margin-top: 7em;
+      margin-left: 4em;
     }
 
     #grid__container .form__heading {
@@ -74,27 +83,33 @@
       font-size: 44px;
       /* margin-bottom: 1.5em;
       text-shadow: -2px -1px 1px black; */
-      color: white;
+      color: rgb(65, 62, 62);
     }
 
-    .txt:focus {
-      border-bottom-color: var(--link);
+    #grid__container .txt:focus {
+      border: 2px solid #247bfd;
       outline: none;
     }
 
     #grid__container .txt {
-      display: block;
-      border-top-width: 0;
-      border-right-width: 0;
-      border-left-width: 0;
+      border-radius: 3px;
       padding: 1em;
-      font-size: 17px;
-      border-bottom-width: 2px !important;
+      font-size: 15px;
+      border: 2px solid #bbc2cd;
       margin-bottom: 3em;
       width: 50%;
-      background-color: var(--white);
+      background-color: rgb(255 255 255);
+      transition: .3s cubic-bezier(0.075, 0.82, 0.165, 1) border;
     }
 
+    .pass-group {
+      width: 50%;
+      right: -6px;
+    }
+
+    .pass-group input.txt {
+      width: 100% !important;
+    }
 
     ::-webkit-input-placeholder {
       font-size: 13px;
@@ -109,10 +124,11 @@
       color: rgb(255, 255, 255);
       padding: 14px;
       font-size: 13px;
+      font-weight: bold;
       letter-spacing: 2px;
       width: 9em;
       margin: 16px 0 16px 0;
-      border-radius: 60px;
+      border-radius: 5px;
       border-style: none;
       text-align: center;
       display: block;
@@ -139,9 +155,9 @@
     #image__container {
       background-color: rgb(255, 235, 223);
       display: grid;
-      background-image: url(/static/images/work.jpg);
+      background-image: url(/static/images/login.webp);
       background-position: center;
-      background-size: contain;
+      background-size: cover;
     }
 
     #image__container>img {
@@ -206,10 +222,11 @@
     .show-pass {
       position: absolute;
       top: 14px;
-      left: 277px;
       transition: all .3s;
+      right: -11px;
       padding: 4px;
       border-radius: 3px;
+      color: rgb(107, 102, 102);
     }
 
     .show-pass:hover {
@@ -242,7 +259,10 @@
         {% csrf_token %}
         {% if messages %}
         {% for message in messages %}
-        <div class="flash">{{message}}</div>
+        <div class="flash">
+          <p class="error">{{message}}
+          </p>
+        </div>
         {%endfor%}
         {% endif %}
         {% if message.tags %}
@@ -255,7 +275,7 @@
         <input type="email" name="email" class="txt" placeholder="Email" required>
         <div class="pass-group">
           <input type="password" name="password" class="txt" placeholder="Password" required>
-          <span class="show-pass">Show</span>
+          <span class="show-pass">show</span>
         </div>
 
         <button class="btn" value="LOGIN">LOGIN</button>
