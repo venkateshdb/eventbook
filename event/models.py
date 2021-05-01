@@ -113,7 +113,7 @@ class order_ticket(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
-         return "Payment:{0}, order:{1}".format(
+         return "Payment: {0}, User: {1}".format(
             self.payment_id,
-            self.order_id
+            self.user.email
         )

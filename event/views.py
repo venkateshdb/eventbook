@@ -79,7 +79,7 @@ def login(request):
                 request.session["logged_in"] = True
                 request.session["user_id"] = get_user.user_id
                 request.session["email"] = get_user.email
-                messages.success(request, "Login Success !!")
+                # messages.success(request, "Login Success !!")
                 return redirect("create_event")
             else:
                 error = "Invalid Credentials!"
@@ -147,7 +147,9 @@ def create_event(request):
 
 @csrf_exempt
 def event_details(request):
-
+    """
+    Manage event registration
+    """
     if request.method == "POST":
         form = json.loads(request.body)
 
@@ -158,10 +160,23 @@ def event_details(request):
         }
 
         # Calls rzpay order API
+        # @resp variable to be sent to client
+        # side, for rzpay js initlization
         resp = client.order.create(data)
-        resp["user"] = form["email"] if form["email"] else request.session.get("email")
-        resp["qty"] = form["qty"]
 
+        # Check if user is logged in, if not register the user
+        if request.session.get("logged_in"):
+            resp['user'] = request.session.get("email")
+        else:
+            _id = id()
+            email = form['email']
+            password = form['pwd']
+            resp['user'] = email
+            User(user_id=_id, email=email,
+                 password=pwd_context.hash(password)).save()
+            request.session["user_id"] = _id
+
+        resp["qty"] = form["qty"]
         request.session["ticket_qty"] = resp["qty"]
         return JsonResponse({'resp':resp})
     else:
@@ -183,12 +198,12 @@ def dashboard(request):
 
     get_event = Event.objects.all().filter(user_id=user_id)
     get_ticket = order_ticket.objects.select_related('event').select_related('user').filter(user_id=user_id)
-
+    print(get_ticket.__dict__)
     # Create qr code
     # Format order_id|event_id|user_id
     for i in range(0, len(get_ticket)):
-        encode_string = "{0}|{1}|{2}".format(get_ticket[i].order_id,get_ticket[i].event.event_id,get_ticket[i].user_id)
-        print(encode_string)
+        encode_string = "{0}|{1}|{2}|{3}".format(get_ticket[i].order_id,get_ticket[i].event.event_id,get_ticket[i].user_id,get_ticket[i].user.email)
+        print("encodee",encode_string)
 
         # Encoded string
         QR = qrcode.make(encode_string)
@@ -270,12 +285,12 @@ def qr_verify(request):
             @Data Encode format
             @ Order_id|event_id|user_id
             """
-
+            print(qr_decode)
             order_id = qr_decode[0]
             event_id = qr_decode[1]
             user_id = qr_decode[2]
 
-            verify_qr = order_ticket.objects.select_related('event').filter(order_id=order_id)[0]
+            verify_qr = order_ticket.objects.select_related('event').select_related("user").filter(order_id=order_id)[0] #bug select related without user sending wrong user !!
 
             data = {
                 "info" : {
@@ -283,14 +298,15 @@ def qr_verify(request):
                 "event_id" : qr_decode[1],
                 "user_id" : qr_decode[2],
                 "pay_id" : verify_qr.payment_id,
-                "user" : verify_qr.event.user.email,
+                "user" : verify_qr.user.email,
                 "event" : verify_qr.event.title,
                 "qty" : verify_qr.qty,
                 "paid" : verify_qr.is_success
                 },
                 "status": "success"
             }
-            print(order_id,event_id,user_id,json.dumps(data))
+            print(data)
+            # print(order_id,event_id,user_id,json.dumps(data))
             return JsonResponse({"status": json.dumps(data)})
         except IndexError:
             return JsonResponse({"status": "QRError"})
